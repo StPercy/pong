@@ -5,7 +5,7 @@ export default class SocketManager {
     }
 
     enableDebugLogs() {
-	this.socket.on('connect_error', err => {
+	    this.socket.on('connect_error', err => {
 	    console.error(`connect_error due to ${err.message}`)
         })
     }
@@ -14,7 +14,15 @@ export default class SocketManager {
         this.socket.on('opponent:found', ({leftPlayerId}) => this.handleOpponentFound.call(this, leftPlayerId))
     }
 
-    handleOpponentFound(leftPlayerId) {
-        this.isLeftPlayer = leftPlayerId === this.socket.id
-    }
+
+	handleOpponentFound(leftPlayerId) {
+		this.isLeftPlayer = leftPlayerId === this.socket.id
+	}
+
+    reset() {
+		this.isLeftPlayer = undefined
+        this.socket.removeAllListeners()
+        this.setupListeners()
+        this.socket.emit('reset')
+	}
 }
